@@ -35,6 +35,22 @@ class LineDetectorHSV(Configurable, LineDetectorInterface):
         configuration = copy.deepcopy(configuration)
         Configurable.__init__(self, param_names, configuration)
 
+        self.dilation_kernel_size = 3
+        self.canny_thresholds = [80,200]
+        self.hough_threshold = 2
+        self.hough_min_line_length = 3
+        self.hough_max_line_gap = 1
+     
+        self.hsv_white1 = [0,0,150]
+        self.hsv_white2 = [180,60,255]
+        self.hsv_yellow1 = [25,140,100]
+        self.hsv_yellow2 = [45,255,255]
+        self.hsv_red1 = [0,140,100]
+        self.hsv_red2 = [15,255,255]
+        self.hsv_red3 = [165,140,100]
+        self.hsv_red4 = [180,255,255]
+
+
     def _colorFilter(self, color):
         # threshold colors in HSV space
         if color == 'white':
@@ -101,6 +117,7 @@ class LineDetectorHSV(Configurable, LineDetectorInterface):
             flag_signs = (np.logical_and(bw[y3,x3]>0, bw[y4,x4]==0)).astype('int')*2-1
             normals = np.hstack([dx, dy]) * flag_signs
             self._correctPixelOrdering(lines, normals)
+
         return centers, normals
 
     def detectLines(self, color):
