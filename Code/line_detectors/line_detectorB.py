@@ -17,6 +17,9 @@ class LineDetectorHSV(Configurable, LineDetectorInterface):
         self.hsv = np.empty(0)
         self.edges = np.empty(0)
 
+#####################################
+# MISE : ignore this
+
         param_names = [
             'hsv_white1',
             'hsv_white2',
@@ -34,6 +37,7 @@ class LineDetectorHSV(Configurable, LineDetectorInterface):
         ]
         configuration = copy.deepcopy(configuration)
         Configurable.__init__(self, param_names, configuration)
+#####################################
 
         self.dilation_kernel_size = 3
         self.canny_thresholds = [80,200]
@@ -85,6 +89,10 @@ class LineDetectorHSV(Configurable, LineDetectorInterface):
             lines = []
         return lines
     
+
+################################
+# MISE: Ignore this!
+
     def _checkBounds(self, val, bound):
         val[val<0]=0
         val[val>=bound]=bound-1
@@ -119,6 +127,7 @@ class LineDetectorHSV(Configurable, LineDetectorInterface):
             self._correctPixelOrdering(lines, normals)
 
         return centers, normals
+################################
 
     def detectLines(self, color):
         bw, edge_color = self._colorFilter(color)
