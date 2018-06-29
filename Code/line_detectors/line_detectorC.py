@@ -43,12 +43,12 @@ class LineDetectorHSV(Configurable, LineDetectorInterface):
      
         self.hsv_white1 = [0,0,150]
         self.hsv_white2 = [180,60,255]
-        self.hsv_yellow1 = [25,140,100]
-        self.hsv_yellow2 = [45,255,255]
+        self.hsv_yellow1 = [165,140,100]
+        self.hsv_yellow2 = [180,255,255]
         self.hsv_red1 = [0,140,100]
         self.hsv_red2 = [15,255,255]
-        self.hsv_red3 = [165,140,100]
-        self.hsv_red4 = [180,255,255]
+        self.hsv_red3 = [25,140,100]
+        self.hsv_red4 = [45,255,255]
 
 
     def _colorFilter(self, color):

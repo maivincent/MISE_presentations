@@ -74,16 +74,17 @@ class LineDetectorHSV(Configurable, LineDetectorInterface):
         return bw, edge_color
 
     def _findEdge(self, gray):
-        edges = cv2.Canny(gray, self.canny_thresholds[0], self.canny_thresholds[1], apertureSize = 3)
-        return edges
-
-    def _HoughLine(self, edge):
         lines = cv2.HoughLinesP(edge, 1, np.pi/180, self.hough_threshold, np.empty(1), self.hough_min_line_length, self.hough_max_line_gap)
         if lines is not None:
             lines = np.array(lines[:,0])
         else:
             lines = []
         return lines
+
+
+    def _HoughLine(self, edge):
+        edges = cv2.Canny(gray, self.canny_thresholds[0], self.canny_thresholds[1], apertureSize = 3)
+        return edges
     
     def _checkBounds(self, val, bound):
         val[val<0]=0
