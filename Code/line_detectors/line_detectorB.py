@@ -17,9 +17,6 @@ class LineDetectorHSV(Configurable, LineDetectorInterface):
         self.hsv = np.empty(0)
         self.edges = np.empty(0)
 
-#####################################
-# MISE : ignore this
-
         param_names = [
             'hsv_white1',
             'hsv_white2',
@@ -37,7 +34,6 @@ class LineDetectorHSV(Configurable, LineDetectorInterface):
         ]
         configuration = copy.deepcopy(configuration)
         Configurable.__init__(self, param_names, configuration)
-#####################################
 
         self.dilation_kernel_size = 3
         self.canny_thresholds = [80,200]
@@ -88,51 +84,17 @@ class LineDetectorHSV(Configurable, LineDetectorInterface):
         else:
             lines = []
         return lines
-    
 
-################################
-# MISE: Ignore this!
-
-    def _checkBounds(self, val, bound):
-        val[val<0]=0
-        val[val>=bound]=bound-1
-        return val
-
-    def _correctPixelOrdering(self, lines, normals):
-        flag = ((lines[:,2]-lines[:,0])*normals[:,1] - (lines[:,3]-lines[:,1])*normals[:,0])>0
-        for i in range(len(lines)):
-            if flag[i]:
-                x1,y1,x2,y2 = lines[i, :]
-                lines[i, :] = [x2,y2,x1,y1] 
- 
-    def _findNormal(self, bw, lines):
-        normals = []
+    # MISE: Ignore this one!
+    def _findNormal(self, bw, lines)
         centers = []
-        if len(lines)>0:
-            length = np.sum((lines[:, 0:2] -lines[:, 2:4])**2, axis=1, keepdims=True)**0.5
-            dx = 1.* (lines[:,3:4]-lines[:,1:2])/length
-            dy = 1.* (lines[:,0:1]-lines[:,2:3])/length
-
-            centers = np.hstack([(lines[:,0:1]+lines[:,2:3])/2, (lines[:,1:2]+lines[:,3:4])/2])
-            x3 = (centers[:,0:1] - 3.*dx).astype('int')
-            y3 = (centers[:,1:2] - 3.*dy).astype('int')
-            x4 = (centers[:,0:1] + 3.*dx).astype('int')
-            y4 = (centers[:,1:2] + 3.*dy).astype('int')
-            x3 = self._checkBounds(x3, bw.shape[1])
-            y3 = self._checkBounds(y3, bw.shape[0])
-            x4 = self._checkBounds(x4, bw.shape[1])
-            y4 = self._checkBounds(y4, bw.shape[0])
-            flag_signs = (np.logical_and(bw[y3,x3]>0, bw[y4,x4]==0)).astype('int')*2-1
-            normals = np.hstack([dx, dy]) * flag_signs
-            self._correctPixelOrdering(lines, normals)
-
-        return centers, normals
-################################
+        normals = []
+    return centers, normals, lines
 
     def detectLines(self, color):
         bw, edge_color = self._colorFilter(color)
         lines = self._HoughLine(edge_color)
-        centers, normals = self._findNormal(bw, lines) # MISE: Ignore this one!
+        centers, normals, lines = self._findNormal(bw, lines) # MISE: Ignore this one!
         return Detections(lines=lines, normals=normals, area=bw, centers=centers)
 
     def setImage(self, bgr):
